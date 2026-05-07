@@ -1,0 +1,106 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+ 
+
+// Custom exception for marks out of range
+@SuppressWarnings("serial")
+class InvalidMarksException extends Exception
+{
+    public InvalidMarksException(String message) 
+    {
+        super(message);
+    }
+}
+
+ 
+
+// Student class with id, name, marks
+class Student {
+    private String name;
+    private int marks;
+
+ 
+
+    public Student(int id, String name, int marks) throws IllegalArgumentException, InvalidMarksException {
+        // Validate name: trim and check emptiness
+        if (name == null || name.trim().isEmpty()) 
+        {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+        // Validate marks
+        if (marks < 0 || marks > 100) 
+        {
+            throw new InvalidMarksException("Marks must be between 0 and 100");
+        }
+        this.name = name.trim();
+        this.marks = marks;
+    }
+
+ 
+
+    public void displayDetails() 
+    {
+        // Convert name to uppercase and print
+        System.out.println("Student: " + name.toUpperCase() + " | Marks: " + marks);
+    }
+}
+
+ 
+
+public class StudentManager {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Student> validStudents = new ArrayList<>();
+
+ 
+
+        System.out.print("Enter number of students: ");
+        int n = Integer.parseInt(scanner.nextLine());
+
+ 
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nStudent " + (i + 1) + ":");
+            try {
+                System.out.print("ID: ");
+                int id = Integer.parseInt(scanner.nextLine());
+
+ 
+
+                System.out.print("Name: ");
+                String name = scanner.nextLine();
+
+ 
+
+                System.out.print("Marks: ");
+                int marks = Integer.parseInt(scanner.nextLine());
+
+ 
+
+                // Create student (validation occurs inside the constructor)
+                Student student = new Student(id, name, marks);
+                validStudents.add(student);
+            } catch (Exception e) {
+                // Catch both IllegalArgumentException and InvalidMarksException
+                System.out.println("Error: Invalid data for student " + (i + 1));
+            }
+        }
+
+ 
+
+        // Display all valid students
+        if (!validStudents.isEmpty()) {
+            System.out.println("\n--- Valid Student Details ---");
+            for (Student s : validStudents) {
+                s.displayDetails();
+            }
+        } else {
+            System.out.println("No valid student records to display.");
+        }
+
+ 
+
+        scanner.close();
+    }
+}
